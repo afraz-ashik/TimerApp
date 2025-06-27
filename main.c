@@ -3,7 +3,8 @@
 // All Rights Reserved
 //*****************************************************************************
 // File    : main.c
-// Summary : Printing current time in GMT, IST and PST timezone.
+// Summary : Prints current time in GMT, IST and PST timezone.
+//           Infinte printf of "LED ON" "LED OFF" every second.
 // Note    : None
 // Author  : Afraz Ashik
 // Date    : 18/JUNE/25
@@ -13,6 +14,7 @@
 #include "appTimer.h"
 #include <unistd.h>
 
+
 //******************************* Local Types *********************************
 
 //***************************** Local Constants *******************************
@@ -20,9 +22,47 @@
 //***************************** Local Variables *******************************
 
 //****************************** Local Functions ******************************
+static bool PrintLedStatus(bool *blLedStatus);
+
+//******************************.PrintLedStatus.*******************************
+// Purpose : Prints "LED ON" "LED OFF" every second.
+// Inputs  : blLedStatus - either true or false when fucntion is called
+// Outputs : blLedStatus - complimented.
+// Return  : None.
+// Notes   : None.
+//*****************************************************************************
+static bool PrintLedStatus(bool *blpLedStatus)
+{
+    bool blNullFLag =true;
+
+    // If pointer is Null
+    if (NULL == blpLedStatus)
+    {
+        blNullFLag = false;
+    }
+    // if LED is indicated to be OFF
+    else if (!*blpLedStatus)
+    {
+        printf("\nLED OFF\n");
+
+        // Set LED status to indicate OFF
+        *blpLedStatus = true;
+    }
+    // if LED is indicated to be ON
+    else
+    {
+        printf("\nLED ON\n");
+
+        // Set LED status to indicate ON
+        *blpLedStatus = false;
+    }
+
+    return blNullFLag;
+}
 
 //******************************.mainFunction.*********************************
 // Purpose : Display time and date in GMT, IST and PST timezone.
+//           Prints "LED ON" "LED OFF" every second.
 // Inputs  : None.
 // Outputs : None.
 // Return  : Zero.
@@ -31,6 +71,7 @@
 int main()
 {
     time_t ulCurrentTime = 0;
+    bool blLedStatus     = false;
 
     while(true)
     {
@@ -74,6 +115,12 @@ int main()
         else
         {
             // Default case
+        }
+
+        // Print LED Status
+        if (!PrintLedStatus(&blLedStatus))
+        {
+            printf("\nNull pointer\n");
         }
 
         // Wait one second for refreshing time
